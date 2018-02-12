@@ -1,0 +1,118 @@
+@import "variables"
+
+.ipt_bedeutung
+  width: 100%
+  display: block
+  padding-left: 0.25rem
+  border-radius: 2px
+  font-weight: bold
+  border: 1px solid #dcdcdc
+  background: #fff
+  &:focus
+    border: none
+.ipt_bedeutung.ipt_disabled
+  background: none
+  border: none
+  pointer-events: none
+
+
+.bestimmungen-container
+  display: block
+
+#vocabinfo-container
+  margin-top: 0.5rem
+  background: #f5f5f5
+  border-radius: 3px
+
+
+.vocabinfo-btns
+  text-align: right
+  button
+    padding: 0
+
+.analysis__grammatikkategorien--container
+  display: block
+  width: auto
+  text-transform: capitalize
+  line-height: normal
+  margin-bottom: 0.25rem
+  &:hover
+    .analysis__grammatikkategorien__kategorie
+      background: $tool_button_active
+.analysis__grammatikkategorien__kategorie
+  display: inline-block
+  color: #fff
+  margin: 1px 0 0 1px
+  background: $tool_button
+  padding: 5px
+  .analysis__grammatikkategorien__kategorie--long
+    display: none
+  &:hover
+    .analysis__grammatikkategorien__kategorie--long
+      display: inline-block
+    .analysis__grammatikkategorien__kategorie--short
+      display: none
+
+.analysis__grammatikkategorien__kategorie.first
+  border-radius: 3px 0px 0px 3px
+.analysis__grammatikkategorien__kategorie.last
+  border-radius: 0px 3px 3px 0px
+
+.isActualLemma-container
+  width: 1000%
+  display: flex
+  justify-content: space-between
+
+
+
+.btn-isActualLemma-unchecked, .isActualLemma-checked
+  background: none
+  padding: 0
+
+
+.btn-isActualLemma-unchecked
+  &::before
+    content: '\f10c'
+    color: #ccc
+    font-family: FontAwesome
+.btn-isActualLemma-unchecked.clickable
+  &:hover::before
+    content: '\f05d'
+    font-family: FontAwesome
+    color: #ccc
+
+.btn-isActualLemma-checked
+  background: none
+  font-size: 18px
+  &::before
+    content: '\f058'
+    color: #5cb85c
+    font-family: FontAwesome
+  &:hover::before
+    content: '\f058'
+    color: #ccc
+    font-family: FontAwesome
+
+@media only screen and (max-width: 960px)
+  .vocabinfo-container-single
+    padding: 0.5rem 0.25rem 0.5rem 0.25rem
+    hr
+      margin: 0.5rem 0 0 0
+  .vocabinfo-btns
+    font-size: 14px
+  .bestimmungen-container
+    margin-top: 0.5rem
+  .analysis__grammatikkategorien__kategorie--long, .analysis__grammatikkategorien__kategorie--short
+    font-size: 10px
+
+@media only screen and (min-width: 960px)
+  .vocabinfo-container-single
+    padding: 1rem 0.5rem 1rem 0.5rem
+    hr
+      margin: 2rem 0 0 0
+  .vocabinfo-btns
+    font-size: 18px
+  .bestimmungen-container
+    margin-top: 1rem
+  .analysis__grammatikkategorien__kategorie--long, .analysis__grammatikkategorien__kategorie--short
+    font-size: 11px
