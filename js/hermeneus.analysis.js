@@ -1,13 +1,13 @@
 import Helpers from '../../helpers/hermeneus.global_helpers'
 
 export default class Analysis {
-    constructor (TargetElement, AttributeName) {
+    constructor (TargetElement, AttributeName, Api) {
         this.AttributeName = AttributeName;
         this.element = TargetElement;
         this.keyword = TargetElement.textContent;
         //this.analysis = (async function() {await Analysis.read(TargetElement, AttributeName)})();
-        this.analysis =  Analysis.read(TargetElement, AttributeName);
-        this.api_get_url = '/analysieren/';
+        this.analysis = Analysis.EmptyAnalysis;
+        this.api_get_url = Api;
 
 
         this.LoadingStatus = false;
@@ -55,28 +55,51 @@ export default class Analysis {
 
 
     /**
-     *
+     * Read Analysis from DOM or (if not possible) retrieve from API
+     * @returns {*}
+     */
+    async analyze () {
+        console.log(this.api_get_url);
+        if (Analysis.read(this.element, this.AttributeName)) {
+            return Analysis.read(this.element, this.AttributeName);
+        }
+        return await this.retrieve(this.keyword, this.api_get_url);
+    }
+
+
+    /**
+     * Retrieves Analysis from a given API
+     * @param keyword
+     */
+    async retrieve (keyword) {
+        return new Promise((resolve, reject) => {
+            resolve(this.getAPI(keyword));
+        });
+    }
+
+
+    /**
+     * Reads analysis from DOM
      * @param DOMElement
      * @param AttributeName
      * @returns {*}
      */
     static read (DOMElement, AttributeName) {
-            if (DOMElement.getAttribute(AttributeName)) {
-                let BestimmungenValue = DOMElement.getAttribute(AttributeName);
-                // Parse attribute to JSON and replace single quotes with double quotes
-                let BestimmungenParsed = JSON.parse(Helpers.substituteSingleQuotes(BestimmungenValue));
-                // If there actually is data
-                if (BestimmungenParsed.length > 0) {
-                    return Analysis.mapBestimmungen(BestimmungenParsed);
-                }
-                else {
-                    return Analysis.EmptyAnalysis;
-                }
+        if (DOMElement.getAttribute(AttributeName)) {
+            let BestimmungenValue = DOMElement.getAttribute(AttributeName);
+            // Parse attribute to JSON and replace single quotes with double quotes
+            let BestimmungenParsed = JSON.parse(Helpers.substituteSingleQuotes(BestimmungenValue));
+            // If there actually is data
+            if (BestimmungenParsed.length > 0) {
+                return Analysis.mapBestimmungen(BestimmungenParsed);
             }
             else {
                 return Analysis.EmptyAnalysis;
             }
+        }
     }
+
+
     /**
      *
      * @param DOMElement
@@ -108,13 +131,17 @@ export default class Analysis {
      * Retrieve Word analysis from API
      * @param Keyword
      */
-    analyze (Keyword) {
+    getAPI (Keyword) {
         let Form = Analysis.sanitizeKeyword(Keyword);
         this.LoadingStatus = true;
         axios.get(this.api_get_url + Form).then(response => {
             this.analysis = Analysis.mapBestimmungen(response.data);
             this.LoadingStatus = false;
-        });
+        }).catch((error) => {
+                this.analysis = Analysis.EmptyAnalysis;
+                this.LoadingStatus = false;
+            }
+        );
     }
 
 
